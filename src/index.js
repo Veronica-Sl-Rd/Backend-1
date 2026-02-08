@@ -1,11 +1,56 @@
 import express from 'express';
+import http from 'http';
+import { Server } from 'socket.io'
+import handlebars from 'express-handlebars'
+
 import { productManager } from "./managers/ProductManager.js"
 import { cartManager } from './managers/CartManager.js';
 
 const app = express();
+const httpServer = http.createServer(app);
+const io = new Server(httpServer);
 
+// ---Middlewares--- //
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('./src/public'));
+
+// ---Handlebars--- //
+app.engine('handlebars', handlebars.engine());
+app.set('views', './src/views');
+app.set('view engine', 'handlebars')
+
+// --- Vistas --- //
+app.get('/', async (req, res) => {
+    const products = await productManager.getProducts();
+    res.render('home', { products });
+});
+
+app.get('/realtimeproducts', async (req, res) => {
+    const products = await productManager.getProducts();
+    res.render('realTimeProducts', { products });
+})
+
+// ---Sockets--- //
+io.on("connection", socket => {
+    console.log ('Cliente conectado');
+    socket.broadcast.emit('userConnected');
+
+    socket.on('addProduct', async data => {
+        await productManager.createProducts(data);
+        const products = await productManager.getProducts();
+        io.emit('productsUpdated', products);
+        io.emit('productAdded');
+    });
+
+    socket.on('deleteProduct', async id => {
+        await productManager.deleteProduct(id);
+        const products = await productManager.getProducts();
+        io.emit('productsUpdated', products);
+        io.emit('productDeleted');
+    });
+});
+
 
 //--------------------PRODUCTOS--------------------------//
 
@@ -90,4 +135,4 @@ app.post('/api/carts/:cid/product/:pid', async (req, res) => {
 });
 
 
-app.listen(8080, () => console.log('Servidor escuchando en el puerto 8080'));
+httpServer.listen(8080, () => console.log('Servidor escuchando en el puerto 8080'));

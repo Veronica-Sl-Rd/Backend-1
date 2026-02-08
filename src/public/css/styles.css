@@ -1,0 +1,132 @@
+* {
+    box-sizing: border-box;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+body {
+    background: #f4f6f8;
+    margin: 0;
+    padding: 40px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+}
+
+#productList {
+    list-style: none;
+    padding: 0;
+    max-width: 400px;
+}
+
+#productList li {
+    background: #bfcdccdc;
+    padding: 10px 14px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#productList button {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+
+.form {
+    max-width: 400px;
+    display: flex;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.form input {
+    flex: 1;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.form input:focus {
+    outline: none;
+    border-color: #38d6ce;
+}
+
+.form button {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    background: #000000;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.form button:hover {
+    background: #3dc2b7d7;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    border-radius: 6px;
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+li button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+li button:hover {
+    transform: scale(1.1);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lista {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.lista li {
+    background: #bfcdccdc;
+    padding: 10px 50px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    display: flex;
+}
+a {
+    text-decoration: none;
+    color: #000000;
+    background-color: #38d6ce;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 20px;
+}
