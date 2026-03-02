@@ -8,7 +8,7 @@ socket.on('productsUpdated', products => {
         list.innerHTML += `
         <li>
             ${p.title} - $${p.price}
-            <button onclick="deleteProduct('${p.id}')">❌</button>
+            <button onclick="deleteProduct('${p._id}')">❌</button>
         </li>`;
     });
 });

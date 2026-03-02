@@ -1,0 +1,27 @@
+<div class="product-detail">
+    <h1>{{product.title}}</h1>
+
+    <p><strong>Descripción:</strong> {{product.description}}</p>
+    <p><strong>Precio:</strong> ${{product.price}}</p>
+    <p><strong>Categoría:</strong> {{product.category}}</p>
+    <p><strong>Stock:</strong> {{product.stock}}</p>
+
+    <button onclick="addToCart('{{product._id}}')">
+        🛒 Agregar al carrito
+    </button>
+    <br><br>
+    <a href="/products">⬅ Volver al listado</a>
+    <script>
+    async function addToCart(pid) {
+        const cid = "69a5ab9caa1cdbe3cc31f8df"; //Harcodear ID
+        try {
+            await fetch(`/api/carts/${cid}/products/${pid}`, {
+                method: "POST"
+            });
+            alert("Producto agregado al carrito");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+    </script>
+</div>

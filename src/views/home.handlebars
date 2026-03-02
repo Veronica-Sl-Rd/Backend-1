@@ -1,10 +1,30 @@
+<a class="cart-link" href="/carts/69a5ab9caa1cdbe3cc31f8df">
+    🛒 Ver carrito
+</a>
+
 <h1>Productos</h1>
 
 <div class="container">
-<ul class="lista">
-    {{#each products}}
-    <li>{{this.title}} - ${{this.price}}</li>
+    <div class="cardContainer">
+    {{#each payload}}
+        <div class="card">
+            <h3>{{this.title}}</h3>
+            <p>Precio: ${{this.price}}</p>
+            <p>Categoría: {{this.category}}</p>
+            <a href="/products/{{this._id}}">Ver detalle</a>
+        </div>
     {{/each}}
-</ul>
-<a href="/realtimeproducts">Ir a vista realtime</a>
+    </div>
+
+    <div class="pagination">
+        {{#if hasPrevPage}}
+        <a href="{{prevLink}}">⬅ Anterior</a>
+        {{/if}}
+        <span>Página {{page}} de {{totalPages}}</span>
+        {{#if hasNextPage}}
+        <a href="{{nextLink}}">Siguiente ➡</a>
+        {{/if}}
+    </div>
+
+    <a href="/realtimeproducts">Ir a vista realtime</a>
 </div>

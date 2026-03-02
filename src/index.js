@@ -5,10 +5,17 @@ import handlebars from 'express-handlebars'
 import productsRouter from './routes/products.router.js';
 import cartsRouter from './routes/carts.router.js';
 import viewsRouter from './routes/views.router.js';
-import { productManager } from "./managers/ProductManager.js"
+import { productRepository } from "./repositories/productRepository.js";
+import { initMongoDB } from "./config/db-connection.js";
+import dotenv from "dotenv";
 
-
+dotenv.config();
 const app = express();
+
+initMongoDB()
+    .then(() => console.log("Conectado a MongoDB"))
+    .catch((err) => console.log(err));
+
 const httpServer = http.createServer(app);
 const io = new Server(httpServer);
 
@@ -26,29 +33,46 @@ app.set('view engine', 'handlebars')
 // ---Routers--- //
 app.use('/', viewsRouter);
 app.use('/api/products', productsRouter);
-app.use('/api/carts', cartsRouter);
+app.use('/api/carts', cartsRouter);//
 
 
 // ---Sockets--- //
-io.on("connection", socket => {
-    console.log ('Cliente conectado');
-    socket.broadcast.emit('userConnected');
-
-    socket.on('addProduct', async data => {
-        await productManager.createProducts(data);
-        const products = await productManager.getProducts();
-        io.emit('productsUpdated', products);
-        io.emit('productAdded');
+io.on("connection", (socket) => {
+    console.log("Cliente conectado");
+    socket.broadcast.emit("userConnected");
+    socket.on("addProduct", async (data) => {
+        try {
+            await productRepository.create({
+                title: data.title,
+                price: Number(data.price)
+            });
+            const result = await productRepository.getAll({}, {
+                limit: 100,
+                page: 1,
+                lean: true
+            });
+            io.emit("productsUpdated", result.docs);
+            io.emit("productAdded");
+        } catch (error) {
+            console.error(error);
+        }
     });
 
-    socket.on('deleteProduct', async id => {
-        await productManager.deleteProduct(id);
-        const products = await productManager.getProducts();
-        io.emit('productsUpdated', products);
-        io.emit('productDeleted');
+    socket.on("deleteProduct", async (id) => {
+        try {
+            await productRepository.delete(id);
+            const result = await productRepository.getAll({}, {
+                limit: 100,
+                page: 1,
+                lean: true
+            });
+            io.emit("productsUpdated", result.docs);
+            io.emit("productDeleted");
+        } catch (error) {
+            console.error(error);
+        }
     });
 });
-
 
 
 httpServer.listen(8080, () => console.log('Servidor escuchando en el puerto 8080'));
